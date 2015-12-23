@@ -1,24 +1,21 @@
 #!/usr/bin/python2
 #Create Dictionary
-import random
-from string import printable
-frequency_list = {}
-for letter in printable:
-    frequency_list.update({letter:{}})
-    for letter2 in printable:
-        frequency_list[letter].update({letter2:0})
+import random, sys
+from string import ascii_lowercase
+from string import ascii_letters
+word_list = {}
 
-#open and scan file, filling dictionary
-mobydick = open("mobydick.txt", "r");
-first_char = "\n";
-while True:
-    second_char = mobydick.read(1);
-    if not second_char:
-        break;
-    frequency_list[first_char][second_char] = frequency_list[first_char][second_char] + 1;
-    first_char = second_char;
-
-mobydick.close()
+def get_next_word(text):
+    word = "";
+    char = text.read(1);
+    if(not char):
+        return word;
+    while(ascii_letters.find(char) == -1):
+        char = text.read(1);
+    while(ascii_letters.find(char) != -1 and char):
+        word += char;
+        char = text.read(1);
+    return word.lower();
 
 
 def weighted_choice(choices):
@@ -31,13 +28,34 @@ def weighted_choice(choices):
         upto += w
     assert False, "mess up"
 
+#open and scan file, filling dictionary
+input_text = open(sys.argv[1], "r");
+first_word = get_next_word(input_text);
+
+while True:
+    second_word = get_next_word(input_text);
+    if(second_word == ""):
+        break;
+    if(not word_list.has_key(first_word)):
+        word_list.update({first_word:{}});
+    if(not word_list[first_word].has_key(second_word)):
+        word_list[first_word].update({second_word:0});
+    else:
+        word_list[first_word][second_word] += 1;
+
+    first_word = second_word;
+
+input_text.close()
+
+print str(word_list);
+
 #generate a string of text
 num = 0
 output = ""
-next_char = "a"
+next_word = "a"
 while num < 500:
-    next_char =  weighted_choice(frequency_list[next_char]);
-    output = output + next_char;
+    next_word =  weighted_choice(word_list[next_word]);
+    output += " " + next_word;
     num = num + 1;
 
 print output;
