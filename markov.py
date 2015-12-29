@@ -1,8 +1,7 @@
 #!/usr/bin/python2
 #Create Dictionary
-import random, sys
-from string import ascii_lowercase
-from string import ascii_letters
+import random, sys, string
+letters = string.ascii_letters + string.punctuation
 word_list = {}
 
 def get_next_word(text):
@@ -10,9 +9,9 @@ def get_next_word(text):
     char = text.read(1);
     if(not char):
         return word;
-    while(ascii_letters.find(char) == -1):
+    while(letters.find(char) == -1):
         char = text.read(1);
-    while(ascii_letters.find(char) != -1 and char):
+    while(letters.find(char) != -1 and char):
         word += char;
         char = text.read(1);
     return word.lower();
@@ -39,7 +38,7 @@ while True:
     if(not word_list.has_key(first_word)):
         word_list.update({first_word:{}});
     if(not word_list[first_word].has_key(second_word)):
-        word_list[first_word].update({second_word:0});
+        word_list[first_word].update({second_word:1});
     else:
         word_list[first_word][second_word] += 1;
 
